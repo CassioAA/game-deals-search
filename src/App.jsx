@@ -1,9 +1,10 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
     const [gameTitle, setGameTitle] = useState("");
     const [searchedGames, setSearchedGames] = useState([]);
+    const [gameDeals, setGameDeals] = useState([]);
 
     function searchGame() {
         fetch(`https://www.cheapshark.com/api/1.0/games?title=${gameTitle}`)
@@ -12,9 +13,23 @@ function App() {
                 setSearchedGames(data);
             })
             .catch((error) =>
-                console.error('Erro ao buscar jogos:', error)
+                console.error('Error when getting the game offers:', error)
             );
     }
+
+    useEffect(() => {
+        fetch(
+            "https://www.cheapshark.com/api/1.0/deals?sortBy=Savings&pageSize=3"
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setGameDeals(data)
+                console.log(data)
+            })
+            .catch((error) =>
+                console.error('Error when getting the biggest game offers:', error)
+            );
+    }, []);
 
     return (
         <div className="App">
@@ -22,7 +37,7 @@ function App() {
                 <h1>Search For A Game</h1>
                 <input
                     type="text"
-                    placeholder="Portal, Gun, League..."
+                    placeholder="Portal, Gun, League, Minecraft..."
                     onChange={(event) => {
                         setGameTitle(event.target.value);
                     }}
@@ -35,7 +50,7 @@ function App() {
                                 {game.external}
                                 <img
                                     src={game.thumb}
-                                    alt={"Imagem não obtida"}
+                                    alt={"Error when getting the image:"}
                                 />
                                 {game.cheapest}
                             </div>
@@ -44,7 +59,19 @@ function App() {
                 </div>
             </div>
             <div className="dealsSection">
-                <h1> Latest Deals </h1>
+                <h1> Greatest Deals </h1>
+                <div className="games">
+                    {gameDeals.map((game, key) => {
+                        return (
+                            <div className="game" id="deals" key={key}>
+                                <h3>{game.title}</h3>
+                                <p>Normal Price: {game.normalPrice}</p>
+                                <p> Deal Price: {game.salePrice}</p>
+                                <h3> YOU SAVE {game.savings.slice(0, 2)}%</h3>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

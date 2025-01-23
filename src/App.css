@@ -4,7 +4,7 @@ body {
 }
 
 input, button {
-    width: 300px;
+    width: 350px;
     height: 50px;
     border: none;
     border-radius: 8px;
@@ -63,9 +63,18 @@ button {
 }
 
 .dealsSection {
+    padding-top: 20px;
     width: 100%;
     flex: 50%;
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+#deals {
+    background-color: cadetblue;
+    color: white;
+    width: 200px;
+    height: 200px;
+    padding-bottom: 30px;
 }
